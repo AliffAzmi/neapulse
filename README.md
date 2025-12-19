@@ -1,2 +1,2 @@
-# newpulse
+# neapulse
 NeaPulse landing page

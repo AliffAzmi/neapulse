@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/* NeaPulse tokens (Tailwind v4 CSS-first config) */
+@theme {
+  --color-midnight: #0f172a; /* Midnight Blue */
+  --color-pulse: #22d3ee; /* Cyan/Teal accent */
+  --color-pulse-soft: #38bdf8;
+  --color-success: #4ade80;
+
+  --font-heading: "Satoshi", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+}
+
+/* Base defaults */
+@layer base {
+  body {
+    font-family: var(--font-body);
+    background: var(--color-midnight);
+    color: rgb(226 232 240);
+  }
+}
