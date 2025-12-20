@@ -71,6 +71,27 @@ function centerTrustedBrand() {
   });
 }
 
+function activeNavMenuItem() {
+  const items = document.querySelectorAll(".menu-nav a[href]");
+
+  const update = () => {
+    const hash = window.location.hash;
+    items.forEach((el) =>
+      el.classList.toggle("active", el.getAttribute("href") === hash)
+    );
+  };
+
+  items.forEach((el) =>
+    el.addEventListener("click", () => {
+      items.forEach((i) => i.classList.remove("active"));
+      el.classList.add("active");
+    })
+  );
+
+  update();
+  window.addEventListener("hashchange", update);
+}
+
 async function boot() {
   await mountPartial("#features", "/partials/features.html");
   await mountPartial("#how-it-works", "/partials/how-it-works.html");
@@ -80,6 +101,7 @@ async function boot() {
   initHeroVideo();
   initFadeOnScroll();
   centerTrustedBrand();
+  activeNavMenuItem();
 
   // Set current year in footer
   const yearEl = document.getElementById("year");

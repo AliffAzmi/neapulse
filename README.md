@@ -31,8 +31,6 @@ No React. No Next.js. Minimal and fast.
 
 ---
 
----
-
 ## 🚀 Local Development
 
 ### Install dependencies

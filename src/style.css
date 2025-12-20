@@ -19,3 +19,7 @@
     color: rgb(226 232 240);
   }
 }
+
+.active {
+  @apply text-pulse-soft bg-pulse/20 font-semibold p-2.5 rounded-lg;
+}
