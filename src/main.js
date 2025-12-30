@@ -29,7 +29,7 @@ function initHeroVideo() {
   }
 
   // Attach sources only when allowed (prevents full download on restricted scenarios)
-  const sources = [{ src: "/neapulse_app_vid_rec.mp4", type: "video/mp4" }];
+  const sources = [{ src: "/neapulse_app_vid_rec2.mp4", type: "video/mp4" }];
 
   for (const s of sources) {
     const el = document.createElement("source");
