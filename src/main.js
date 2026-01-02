@@ -61,13 +61,60 @@ function centerTrustedBrand() {
   const el = document.querySelector("[data-center]");
   if (!el) return;
 
-  // Delay ensures layout + fonts are ready
+  const scroller = el.closest(".overflow-x-auto");
+  if (!(scroller instanceof HTMLElement)) return;
+
+  // Delay ensures layout + fonts are ready.
+  // Avoid `scrollIntoView()` here because it can also scroll vertically on reload.
   requestAnimationFrame(() => {
-    el.scrollIntoView({
-      behavior: "auto",
-      inline: "center",
-      block: "nearest",
-    });
+    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+    if (maxScrollLeft <= 0) return;
+
+    const elLeft = el.offsetLeft;
+    const target = elLeft - (scroller.clientWidth / 2 - el.clientWidth / 2);
+    const nextScrollLeft = Math.max(0, Math.min(maxScrollLeft, target));
+    scroller.scrollLeft = nextScrollLeft;
+  });
+}
+
+function initMobileMenu() {
+  const button = document.getElementById("mobileMenuButton");
+  const menu = document.getElementById("mobileMenu");
+  if (!button || !menu) return;
+
+  const mql = window.matchMedia?.("(min-width: 768px)");
+  const isOpen = () => !menu.classList.contains("hidden");
+
+  const setOpen = (open) => {
+    menu.classList.toggle("hidden", !open);
+    button.setAttribute("aria-expanded", open ? "true" : "false");
+  };
+
+  const toggle = () => setOpen(!isOpen());
+
+  button.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggle();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!isOpen()) return;
+    const target = e.target;
+    if (!(target instanceof Node)) return;
+    if (menu.contains(target) || button.contains(target)) return;
+    setOpen(false);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") setOpen(false);
+  });
+
+  menu
+    .querySelectorAll("a[href]")
+    .forEach((a) => a.addEventListener("click", () => setOpen(false)));
+
+  window.addEventListener("resize", () => {
+    if (mql?.matches) setOpen(false);
   });
 }
 
@@ -99,6 +146,7 @@ async function boot() {
   await mountPartial("#final-cta", "/partials/final-cta.html");
   await mountPartial("#footer", "/partials/footer.html");
   initHeroVideo();
+  initMobileMenu();
   initFadeOnScroll();
   centerTrustedBrand();
   activeNavMenuItem();
