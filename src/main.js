@@ -16,21 +16,15 @@ function shouldAutoplayVideo() {
 
 function initHeroVideo() {
   const video = document.getElementById("heroVideo");
-  const hint = document.getElementById("heroVideoHint");
   if (!video) return;
 
   const canAuto = shouldAutoplayVideo();
-
   if (!canAuto) {
-    // Keep poster; show hint
-    hint?.classList.remove("hidden");
-    video.classList.add("opacity-100"); // show poster nicely
+    video.classList.add("opacity-100");
     return;
   }
 
-  // Attach sources only when allowed (prevents full download on restricted scenarios)
   const sources = [{ src: "/neapulse_app_vid_rec2.mp4", type: "video/mp4" }];
-
   for (const s of sources) {
     const el = document.createElement("source");
     el.src = s.src;
@@ -39,19 +33,11 @@ function initHeroVideo() {
   }
 
   video.autoplay = true;
-
-  // Attempt playback; if blocked, we gracefully fallback to poster
   video
     .play()
-    .then(() => {
-      video.classList.add("opacity-100");
-    })
-    .catch(() => {
-      hint?.classList.remove("hidden");
-      video.classList.add("opacity-100");
-    });
+    .then(() => video.classList.add("opacity-100"))
+    .catch(() => video.classList.add("opacity-100"));
 
-  // Make sure it fades in even if play takes time
   video.addEventListener("loadeddata", () => {
     video.classList.add("opacity-100");
   });
@@ -64,8 +50,6 @@ function centerTrustedBrand() {
   const scroller = el.closest(".overflow-x-auto");
   if (!(scroller instanceof HTMLElement)) return;
 
-  // Delay ensures layout + fonts are ready.
-  // Avoid `scrollIntoView()` here because it can also scroll vertically on reload.
   requestAnimationFrame(() => {
     const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
     if (maxScrollLeft <= 0) return;
@@ -145,17 +129,15 @@ async function boot() {
   await mountPartial("#pricing", "/partials/pricing.html");
   await mountPartial("#final-cta", "/partials/final-cta.html");
   await mountPartial("#footer", "/partials/footer.html");
+
   initHeroVideo();
   initMobileMenu();
   initFadeOnScroll();
   centerTrustedBrand();
   activeNavMenuItem();
 
-  // Set current year in footer
   const yearEl = document.getElementById("year");
-  if (yearEl) {
-    yearEl.textContent = new Date().getFullYear();
-  }
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
 }
 
 if (document.readyState === "loading") {
